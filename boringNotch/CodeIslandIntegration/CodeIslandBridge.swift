@@ -25,6 +25,7 @@ final class CodeIslandBridge: ObservableObject {
     @Published var hasActiveSessions: Bool = false
     @Published var isAIWorking: Bool = false
     @Published var sessionCount: Int = 0
+    @Published var totalSessionCount: Int = 0
     @Published var activeToolName: String?
     @Published var activeSource: String = "claude"
     @Published var needsAttention: Bool = false
@@ -88,6 +89,7 @@ final class CodeIslandBridge: ObservableObject {
                     withObservationTracking {
                         _ = state.sessions
                         _ = state.activeSessionCount
+                        _ = state.totalSessionCount
                         _ = state.status
                         _ = state.primarySource
                         _ = state.pendingPermission
@@ -105,6 +107,7 @@ final class CodeIslandBridge: ObservableObject {
 
     private func syncState(from state: AppState) {
         let newSessionCount = state.activeSessionCount
+        let newTotalCount = state.totalSessionCount
         let newHasActive = !state.sessions.isEmpty
         let newStatus = state.status
         let newSource = state.primarySource
@@ -115,6 +118,7 @@ final class CodeIslandBridge: ObservableObject {
         let newTool = displaySession?.currentTool
 
         if sessionCount != newSessionCount { sessionCount = newSessionCount }
+        if totalSessionCount != newTotalCount { totalSessionCount = newTotalCount }
         if hasActiveSessions != newHasActive { hasActiveSessions = newHasActive }
         if agentStatus != newStatus { agentStatus = newStatus }
         if activeSource != newSource { activeSource = newSource }

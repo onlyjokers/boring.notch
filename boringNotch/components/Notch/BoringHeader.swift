@@ -121,9 +121,35 @@ struct BoringHeader: View {
 /// Right-side header content when CodeIsland tab is active
 private struct CodeIslandHeaderRight: View {
     var appState: AppState
+    @AppStorage(SettingsKey.sessionGroupingMode) private var groupingMode = SettingsDefaults.sessionGroupingMode
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
+            // ALL / STA / CLI filter tabs
+            if appState.sessions.count > 1 {
+                HStack(spacing: 1) {
+                    ForEach([("all", "ALL"), ("status", "STA"), ("cli", "CLI")], id: \.0) { tag, label in
+                        let selected = groupingMode == tag
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.15)) { groupingMode = tag }
+                        } label: {
+                            Text(label)
+                                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                                .foregroundStyle(selected ? Color(red: 0.3, green: 0.85, blue: 0.4) : .white.opacity(0.3))
+                                .padding(.horizontal, 5)
+                                .padding(.vertical, 3)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 3)
+                                        .fill(selected ? .white.opacity(0.1) : .clear)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .background(RoundedRectangle(cornerRadius: 4).fill(.white.opacity(0.05)))
+                .overlay(RoundedRectangle(cornerRadius: 4).stroke(.white.opacity(0.1), lineWidth: 1))
+            }
+
             // Pending approval/question badge
             if appState.status == .waitingApproval || appState.status == .waitingQuestion {
                 Image(systemName: "bell.fill")

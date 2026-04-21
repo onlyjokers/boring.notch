@@ -191,9 +191,10 @@ class BoringViewModel: NSObject, ObservableObject {
 
     func open() {
         self.notchSize = openNotchSize
-        // Expand height for CodeIsland tab
+        // Expand height for CodeIsland tab based on actual session count
         if coordinator.currentView == .codeIsland {
-            self.notchSize.height = codeIslandOpenNotchSize.height
+            let count = CodeIslandBridge.shared.totalSessionCount
+            self.notchSize.height = codeIslandHeightForSessions(count)
         }
         self.notchState = .open
 

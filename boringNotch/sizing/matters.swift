@@ -20,7 +20,15 @@ var codeIslandOpenNotchSize: CGSize {
     let height = max(300, CGFloat(effectiveMax) * 90 + 60)
     return .init(width: openNotchSize.width, height: height)
 }
-let windowSize: CGSize = .init(width: openNotchSize.width, height: max(openNotchSize.height, 510) + shadowPadding)
+
+/// Compute CodeIsland height based on actual visible session count
+func codeIslandHeightForSessions(_ count: Int) -> CGFloat {
+    let maxVisible = max(2, UserDefaults.standard.integer(forKey: "maxVisibleSessions"))
+    let effectiveMax = maxVisible == 0 ? 5 : maxVisible
+    let clamped = max(1, min(count, effectiveMax))
+    return CGFloat(clamped) * 90 + 60
+}
+let windowSize: CGSize = .init(width: openNotchSize.width, height: max(openNotchSize.height, codeIslandOpenNotchSize.height) + shadowPadding)
 let cornerRadiusInsets: (opened: (top: CGFloat, bottom: CGFloat), closed: (top: CGFloat, bottom: CGFloat)) = (opened: (top: 19, bottom: 24), closed: (top: 6, bottom: 14))
 
 enum MusicPlayerImageSizes {

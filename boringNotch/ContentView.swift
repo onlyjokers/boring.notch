@@ -32,6 +32,7 @@ struct ContentView: View {
     @State private var gestureProgress: CGFloat = .zero
 
     @State private var haptics: Bool = false
+    @State private var swipeHandled: Bool = false
 
     @Namespace var albumArtNamespace
 
@@ -160,6 +161,15 @@ struct ContentView: View {
                                 handleUpGesture(translation: translation, phase: phase)
                             }
                     }
+                    .conditionalModifier(Defaults[.enableGestures]) { view in
+                        view
+                            .panGesture(direction: .left) { translation, phase in
+                                handleHorizontalSwipe(translation: translation, phase: phase, direction: .left)
+                            }
+                            .panGesture(direction: .right) { translation, phase in
+                                handleHorizontalSwipe(translation: translation, phase: phase, direction: .right)
+                            }
+                    }
                     .onReceive(NotificationCenter.default.publisher(for: .sharingDidFinish)) { _ in
                         if vm.notchState == .open && !isHovering && !vm.isBatteryPopoverActive {
                             hoverTask?.cancel()
@@ -184,7 +194,18 @@ struct ContentView: View {
                     .onChange(of: coordinator.currentView) { _, newView in
                         guard vm.notchState == .open else { return }
                         withAnimation(.spring(response: 0.42, dampingFraction: 0.8)) {
-                            vm.notchSize.height = newView == .codeIsland ? codeIslandOpenNotchSize.height : openNotchSize.height
+                            if newView == .codeIsland {
+                                let count = ciBridge.appState?.totalSessionCount ?? 0
+                                vm.notchSize.height = codeIslandHeightForSessions(count)
+                            } else {
+                                vm.notchSize.height = openNotchSize.height
+                            }
+                        }
+                    }
+                    .onChange(of: ciBridge.totalSessionCount) { _, newCount in
+                        guard vm.notchState == .open, coordinator.currentView == .codeIsland else { return }
+                        withAnimation(.spring(response: 0.42, dampingFraction: 0.8)) {
+                            vm.notchSize.height = codeIslandHeightForSessions(newCount)
                         }
                     }
                     .onChange(of: vm.isBatteryPopoverActive) {
@@ -650,6 +671,41 @@ struct ContentView: View {
             if Defaults[.enableHaptics] {
                 haptics.toggle()
             }
+        }
+    }
+
+    // MARK: - Horizontal Swipe (Tab Switching)
+
+    private static let tabOrder: [NotchViews] = [.home, .shelf, .codeIsland]
+
+    private func handleHorizontalSwipe(translation: CGFloat, phase: NSEvent.Phase, direction: PanDirection) {
+        guard vm.notchState == .open else { return }
+
+        if phase == .ended {
+            swipeHandled = false
+            return
+        }
+
+        guard !swipeHandled, translation > Defaults[.gestureSensitivity] else { return }
+        swipeHandled = true
+
+        let order = Self.tabOrder
+        guard let idx = order.firstIndex(of: coordinator.currentView) else { return }
+
+        let nextIdx: Int
+        if direction == .left {
+            // swipe left → next tab
+            nextIdx = idx + 1
+        } else {
+            // swipe right → previous tab
+            nextIdx = idx - 1
+        }
+
+        guard order.indices.contains(nextIdx) else { return }
+
+        if Defaults[.enableHaptics] { haptics.toggle() }
+        withAnimation(.smooth) {
+            coordinator.currentView = order[nextIdx]
         }
     }
 }
