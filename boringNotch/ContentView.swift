@@ -161,7 +161,7 @@ struct ContentView: View {
                                 handleUpGesture(translation: translation, phase: phase)
                             }
                     }
-                    .conditionalModifier(Defaults[.enableGestures]) { view in
+                    .conditionalModifier(Defaults[.enableGestures] && Defaults[.horizontalSwipeToSwitchTabs]) { view in
                         view
                             .panGesture(direction: .left) { translation, phase in
                                 handleHorizontalSwipe(translation: translation, phase: phase, direction: .left)

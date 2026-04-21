@@ -105,6 +105,16 @@ private struct ScrollMonitor: NSViewRepresentable {
         }
 
         private func handleScroll(_ event: NSEvent) {
+            // Don't intercept vertical scroll events inside an NSScrollView
+            if !direction.isHorizontal,
+               let contentView = event.window?.contentView {
+                let loc = event.locationInWindow
+                if let hitView = contentView.hitTest(loc),
+                   hitView.enclosingScrollView != nil {
+                    return
+                }
+            }
+
             if event.phase == .ended || event.momentumPhase == .ended {
                 if active {
                     action(accumulated.magnitude, .ended)

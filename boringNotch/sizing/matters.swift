@@ -28,7 +28,7 @@ func codeIslandHeightForSessions(_ count: Int) -> CGFloat {
     let clamped = max(1, min(count, effectiveMax))
     return CGFloat(clamped) * 90 + 60
 }
-let windowSize: CGSize = .init(width: openNotchSize.width, height: max(openNotchSize.height, codeIslandOpenNotchSize.height) + shadowPadding)
+let windowSize: CGSize = .init(width: openNotchSize.width, height: max(openNotchSize.height, codeIslandOpenNotchSize.height) + shadowPadding + 50)
 let cornerRadiusInsets: (opened: (top: CGFloat, bottom: CGFloat), closed: (top: CGFloat, bottom: CGFloat)) = (opened: (top: 19, bottom: 24), closed: (top: 6, bottom: 14))
 
 enum MusicPlayerImageSizes {

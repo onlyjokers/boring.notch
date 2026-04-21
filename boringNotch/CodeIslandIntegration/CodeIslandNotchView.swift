@@ -17,14 +17,16 @@ struct CodeIslandNotchView: View {
     var body: some View {
         Group {
             if let state = bridge.appState {
-                EmbeddedExpandedContent(appState: state)
-                    .onChange(of: state.surface) { _, newSurface in
-                        if isVisible && newSurface == .collapsed && !state.sessions.isEmpty {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
-                                state.surface = .sessionList
+                ScrollView(.vertical, showsIndicators: false) {
+                    EmbeddedExpandedContent(appState: state)
+                        .onChange(of: state.surface) { _, newSurface in
+                            if isVisible && newSurface == .collapsed && !state.sessions.isEmpty {
+                                withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                    state.surface = .sessionList
+                                }
                             }
                         }
-                    }
+                }
             } else {
                 emptyState
             }

@@ -4312,6 +4312,7 @@
       }
     },
     "Change media with horizontal gestures" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -21041,6 +21042,9 @@
           }
         }
       }
+    },
+    "Switch tabs with horizontal swipe" : {
+
     },
     "System" : {
       "localizations" : {
