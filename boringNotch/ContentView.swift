@@ -37,6 +37,8 @@ struct ContentView: View {
 
     @Default(.showNotHumanFace) var showNotHumanFace
 
+    @ObservedObject var ciBridge = CodeIslandBridge.shared
+
     // Shared interactive spring for movement/resizing to avoid conflicting animations
     private let animationSpring = Animation.interactiveSpring(response: 0.38, dampingFraction: 0.8, blendDuration: 0)
 
@@ -75,6 +77,10 @@ struct ContentView: View {
             && !vm.hideOnClosed
         {
             chinWidth += (2 * max(0, vm.effectiveClosedNotchHeight - 12) + 20)
+        } else if !coordinator.expandingView.show && vm.notchState == .closed
+            && ciBridge.isAIWorking && !vm.hideOnClosed
+        {
+            chinWidth += 120
         }
 
         return chinWidth
@@ -166,6 +172,18 @@ struct ContentView: View {
                                 isHovering = false
                             }
                         }
+                        // Resize notch for CodeIsland tab
+                        if newState == .open && coordinator.currentView == .codeIsland {
+                            withAnimation(.spring(response: 0.42, dampingFraction: 0.8)) {
+                                vm.notchSize = codeIslandOpenNotchSize
+                            }
+                        }
+                    }
+                    .onChange(of: coordinator.currentView) { _, newView in
+                        guard vm.notchState == .open else { return }
+                        withAnimation(.spring(response: 0.42, dampingFraction: 0.8)) {
+                            vm.notchSize = newView == .codeIsland ? codeIslandOpenNotchSize : openNotchSize
+                        }
                     }
                     .onChange(of: vm.isBatteryPopoverActive) {
                         if !vm.isBatteryPopoverActive && !isHovering && vm.notchState == .open && !SharingStateManager.shared.preventNotchClose {
@@ -214,6 +232,12 @@ struct ContentView: View {
         .background(dragDetector)
         .preferredColorScheme(.dark)
         .environmentObject(vm)
+        .onReceive(NotificationCenter.default.publisher(for: .codeIslandNeedsAttention)) { _ in
+            if vm.notchState == .closed {
+                coordinator.currentView = .codeIsland
+                doOpen()
+            }
+        }
         .onChange(of: vm.anyDropZoneTargeting) { _, isTargeted in
             anyDropDebounceTask?.cancel()
 
@@ -292,6 +316,8 @@ struct ContentView: View {
                               .frame(alignment: .center)
                       } else if !coordinator.expandingView.show && vm.notchState == .closed && (!musicManager.isPlaying && musicManager.isPlayerIdle) && Defaults[.showNotHumanFace] && !vm.hideOnClosed  {
                           BoringFaceAnimation()
+                       } else if !coordinator.expandingView.show && vm.notchState == .closed && ciBridge.isAIWorking && !vm.hideOnClosed {
+                          CodeIslandClosedWing()
                        } else if vm.notchState == .open {
                            BoringHeader()
                                .frame(height: max(24, vm.effectiveClosedNotchHeight))
@@ -349,6 +375,8 @@ struct ContentView: View {
                         NotchHomeView(albumArtNamespace: albumArtNamespace)
                     case .shelf:
                         ShelfView()
+                    case .codeIsland:
+                        CodeIslandNotchView()
                     }
                 }
                 .transition(
@@ -383,6 +411,18 @@ struct ContentView: View {
             height: vm.effectiveClosedNotchHeight,
             alignment: .center
         )
+    }
+
+    @ViewBuilder
+    func CodeIslandClosedWing() -> some View {
+        HStack(spacing: 0) {
+            CodeIslandLeftWing(height: vm.effectiveClosedNotchHeight)
+            Rectangle()
+                .fill(.black)
+                .frame(width: vm.closedNotchSize.width - 20)
+            CodeIslandRightWing(height: vm.effectiveClosedNotchHeight)
+        }
+        .frame(height: vm.effectiveClosedNotchHeight, alignment: .center)
     }
 
     @ViewBuilder

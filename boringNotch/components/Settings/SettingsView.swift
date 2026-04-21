@@ -57,6 +57,9 @@ struct SettingsView: View {
                 // NavigationLink(value: "Extensions") {
                 //     Label("Extensions", systemImage: "puzzlepiece.extension")
                 // }
+                NavigationLink(value: "CodeIsland") {
+                    Label("AI Monitor", systemImage: "terminal")
+                }
                 NavigationLink(value: "Advanced") {
                     Label("Advanced", systemImage: "gearshape.2")
                 }
@@ -89,6 +92,8 @@ struct SettingsView: View {
                     Shortcuts()
                 case "Extensions":
                     GeneralSettings()
+                case "CodeIsland":
+                    CodeIslandSettingsTab()
                 case "Advanced":
                     Advanced()
                 case "About":

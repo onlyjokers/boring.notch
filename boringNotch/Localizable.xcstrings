@@ -1701,6 +1701,9 @@
         }
       }
     },
+    "Active sessions" : {
+
+    },
     "Add" : {
       "localizations" : {
         "ar" : {
@@ -2201,6 +2204,9 @@
           }
         }
       }
+    },
+    "AI Monitor" : {
+
     },
     "All-day" : {
       "localizations" : {
@@ -5902,6 +5908,9 @@
         }
       }
     },
+    "Configuration" : {
+
+    },
     "Continue" : {
       "localizations" : {
         "ar" : {
@@ -7404,6 +7413,9 @@
           }
         }
       }
+    },
+    "Display" : {
+
     },
     "Download" : {
       "localizations" : {
@@ -11208,6 +11220,9 @@
         }
       }
     },
+    "Hook Status" : {
+
+    },
     "Hover delay" : {
       "localizations" : {
         "ar" : {
@@ -13009,6 +13024,9 @@
         }
       }
     },
+    "Max visible sessions: %lld" : {
+
+    },
     "Media" : {
       "localizations" : {
         "ar" : {
@@ -14509,6 +14527,9 @@
         }
       }
     },
+    "No AI sessions" : {
+
+    },
     "No custom animation available" : {
       "localizations" : {
         "ar" : {
@@ -15609,6 +15630,9 @@
           }
         }
       }
+    },
+    "Open CodeIsland Settings..." : {
+
     },
     "Open Notch" : {
       "localizations" : {
@@ -18012,7 +18036,6 @@
       }
     },
     "Running" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -18411,6 +18434,9 @@
           }
         }
       }
+    },
+    "Server" : {
+
     },
     "Settings" : {
       "localizations" : {
@@ -20813,7 +20839,6 @@
       }
     },
     "Stopped" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

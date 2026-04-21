@@ -90,6 +90,10 @@
 		14C08BC12C8E03AD000F8AA0 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14C08BC02C8E03AD000F8AA0 /* NSImage+Extensions.swift */; };
 		14CEF4162C5CAED300855D72 /* boringNotchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CEF4152C5CAED300855D72 /* boringNotchApp.swift */; };
 		14CEF4182C5CAED300855D72 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14CEF4172C5CAED300855D72 /* ContentView.swift */; };
+		7B6262B62A275CE2E575BE99 /* CodeIslandBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AAFCB35E57969EE0D220DD /* CodeIslandBridge.swift */; };
+		5B8680C7A9954A04502F4903 /* CodeIslandNotchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B464DBDA382BAD17C6008410 /* CodeIslandNotchView.swift */; };
+		DBAB8D17E082096585C53F28 /* CodeIslandWingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42B622C1E648D394A19CC44A /* CodeIslandWingView.swift */; };
+		ACF399F933C0D711B19875FA /* CodeIslandSettingsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73A28A597747BEFBAB88118 /* CodeIslandSettingsTab.swift */; };
 		14CEF41A2C5CAED400855D72 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14CEF4192C5CAED400855D72 /* Assets.xcassets */; };
 		14CEF41D2C5CAED400855D72 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 14CEF41C2C5CAED400855D72 /* Preview Assets.xcassets */; };
 		14D0321A2C68F32E0096E6A1 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 14D032192C68F32E0096E6A1 /* LaunchAtLogin */; };
@@ -259,6 +263,10 @@
 		14CEF4122C5CAED300855D72 /* boringNotch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = boringNotch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		14CEF4152C5CAED300855D72 /* boringNotchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = boringNotchApp.swift; sourceTree = "<group>"; };
 		14CEF4172C5CAED300855D72 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C3AAFCB35E57969EE0D220DD /* CodeIslandBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeIslandBridge.swift; sourceTree = "<group>"; };
+		B464DBDA382BAD17C6008410 /* CodeIslandNotchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeIslandNotchView.swift; sourceTree = "<group>"; };
+		42B622C1E648D394A19CC44A /* CodeIslandWingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeIslandWingView.swift; sourceTree = "<group>"; };
+		A73A28A597747BEFBAB88118 /* CodeIslandSettingsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeIslandSettingsTab.swift; sourceTree = "<group>"; };
 		14CEF4192C5CAED400855D72 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		14CEF41C2C5CAED400855D72 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		14CEF41E2C5CAED400855D72 /* boringNotch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = boringNotch.entitlements; sourceTree = "<group>"; };
@@ -561,6 +569,7 @@
 		14CEF4142C5CAED300855D72 /* boringNotch */ = {
 			isa = PBXGroup;
 			children = (
+				C75C5AEF30E2B2FA7BB0EB96 /* CodeIslandIntegration */,
 				11F748672EC9AC9600F841DB /* XPCHelperClient */,
 				116398942DF5D6B40052E6AF /* Providers */,
 				14288DE22C6E016F00B9F80C /* observers */,
@@ -586,6 +595,17 @@
 				11CC44A12CEE614100C7244B /* BoringViewCoordinator.swift */,
 			);
 			path = boringNotch;
+			sourceTree = "<group>";
+		};
+		C75C5AEF30E2B2FA7BB0EB96 /* CodeIslandIntegration */ = {
+			isa = PBXGroup;
+			children = (
+				C3AAFCB35E57969EE0D220DD /* CodeIslandBridge.swift */,
+				B464DBDA382BAD17C6008410 /* CodeIslandNotchView.swift */,
+				42B622C1E648D394A19CC44A /* CodeIslandWingView.swift */,
+				A73A28A597747BEFBAB88118 /* CodeIslandSettingsTab.swift */,
+			);
+			path = CodeIslandIntegration;
 			sourceTree = "<group>";
 		};
 		14CEF41B2C5CAED400855D72 /* Preview Content */ = {
@@ -791,6 +811,7 @@
 				14CEF4102C5CAED300855D72 /* Resources */,
 				B1ECFA062C6FE58A002ACD87 /* Embed Frameworks */,
 				11F748412EC8051E00F841DB /* Embed XPC Services */,
+				C75C5AEF30E2B2FA00000001 /* Build codeisland-bridge */,
 			);
 			buildRules = (
 			);
@@ -814,6 +835,8 @@
 				111BEA502ECFBF7F0079DD4E /* MacroVisionKit */,
 				111BEA5E2ED07A340079DD4E /* MacroVisionKit */,
 				111BEA6E2ED166E20079DD4E /* MacroVisionKit */,
+				CODEISLAND02EE000000000002 /* CodeIslandLib */,
+				CODEISLAND02EE000000000003 /* CodeIslandCore */,
 			);
 			productName = dynamicNotch;
 			productReference = 14CEF4122C5CAED300855D72 /* boringNotch.app */;
@@ -859,6 +882,7 @@
 				11F748712EC9DA9300F841DB /* XCRemoteSwiftPackageReference "lottie-spm" */,
 				111BE95B2ECD71E10079DD4E /* XCRemoteSwiftPackageReference "AsyncXPCConnection" */,
 				111BEA6D2ED166E20079DD4E /* XCRemoteSwiftPackageReference "MacroVisionKit" */,
+				CODEISLAND02EE000000000001 /* XCLocalSwiftPackageReference "CodeIsland" */,
 			);
 			productRefGroup = 14CEF4132C5CAED300855D72 /* Products */;
 			projectDirPath = "";
@@ -892,6 +916,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C75C5AEF30E2B2FA00000001 /* Build codeisland-bridge */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Build codeisland-bridge";
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(CONTENTS_FOLDER_PATH)/Helpers/codeisland-bridge",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -euo pipefail\nCI_DIR=\"${SRCROOT}/../CodeIsland\"\nHELPERS_DIR=\"${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/Helpers\"\nmkdir -p \"${HELPERS_DIR}\"\n# Use pre-built binary from CodeIsland .build directory\n# Run 'cd ../CodeIsland && swift build -c release --product codeisland-bridge' manually if missing\nBIN=\"${CI_DIR}/.build/arm64-apple-macosx/release/codeisland-bridge\"\nif [ ! -f \"${BIN}\" ]; then\n  BIN=\"${CI_DIR}/.build/release/codeisland-bridge\"\nfi\nif [ ! -f \"${BIN}\" ]; then\n  echo \"warning: codeisland-bridge not found. Run: cd ${CI_DIR} && swift build -c release --product codeisland-bridge\"\n  exit 0\nfi\ncp -f \"${BIN}\" \"${HELPERS_DIR}/codeisland-bridge\"\ncodesign --force --sign - \"${HELPERS_DIR}/codeisland-bridge\" 2>/dev/null || true\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		11F7484B2EC9AABA00F841DB /* Sources */ = {
@@ -986,6 +1028,10 @@
 				507266DB2C908E2E00A2D00D /* HoverButton.swift in Sources */,
 				1471A8592C6281BD0058408D /* BoringNotchWindow.swift in Sources */,
 				14CEF4182C5CAED300855D72 /* ContentView.swift in Sources */,
+				7B6262B62A275CE2E575BE99 /* CodeIslandBridge.swift in Sources */,
+				5B8680C7A9954A04502F4903 /* CodeIslandNotchView.swift in Sources */,
+				DBAB8D17E082096585C53F28 /* CodeIslandWingView.swift in Sources */,
+				ACF399F933C0D711B19875FA /* CodeIslandSettingsTab.swift in Sources */,
 				9A987A0D2C73CA66005CA465 /* ShelfView.swift in Sources */,
 				1132E5142E777B920068732D /* YouTubeMusicNetworking.swift in Sources */,
 				1132E5122E777B6E0068732D /* YouTubeMusicModels.swift in Sources */,
@@ -1438,6 +1484,13 @@
 		};
 /* End XCRemoteSwiftPackageReference section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		CODEISLAND02EE000000000001 /* XCLocalSwiftPackageReference "CodeIsland" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../CodeIsland;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		111BE95C2ECD71E10079DD4E /* AsyncXPCConnection */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1496,6 +1549,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B19016202CC15B3D00E3F12E /* XCRemoteSwiftPackageReference "Defaults" */;
 			productName = Defaults;
+		};
+		CODEISLAND02EE000000000002 /* CodeIslandLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CODEISLAND02EE000000000001 /* XCLocalSwiftPackageReference "CodeIsland" */;
+			productName = CodeIslandLib;
+		};
+		CODEISLAND02EE000000000003 /* CodeIslandCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CODEISLAND02EE000000000001 /* XCLocalSwiftPackageReference "CodeIsland" */;
+			productName = CodeIslandCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
