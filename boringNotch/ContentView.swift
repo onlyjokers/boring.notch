@@ -12,6 +12,8 @@ import Defaults
 import KeyboardShortcuts
 import SwiftUI
 import SwiftUIIntrospect
+import CodeIslandLib
+import CodeIslandCore
 
 @MainActor
 struct ContentView: View {
@@ -80,7 +82,13 @@ struct ContentView: View {
         } else if !coordinator.expandingView.show && vm.notchState == .closed
             && ciBridge.isAIWorking && !vm.hideOnClosed
         {
-            chinWidth += 120
+            if let state = ciBridge.appState {
+                let screenW = getScreenFrame(coordinator.selectedScreenUUID)?.width ?? 1440
+                let panel = EmbeddedClosedPanel(appState: state, notchHeight: vm.effectiveClosedNotchHeight, notchW: vm.closedNotchSize.width, screenWidth: screenW)
+                chinWidth = panel.panelWidth
+            } else {
+                chinWidth += (2 * max(0, vm.effectiveClosedNotchHeight - 12) + 20)
+            }
         }
 
         return chinWidth
@@ -172,17 +180,11 @@ struct ContentView: View {
                                 isHovering = false
                             }
                         }
-                        // Resize notch for CodeIsland tab
-                        if newState == .open && coordinator.currentView == .codeIsland {
-                            withAnimation(.spring(response: 0.42, dampingFraction: 0.8)) {
-                                vm.notchSize = codeIslandOpenNotchSize
-                            }
-                        }
                     }
                     .onChange(of: coordinator.currentView) { _, newView in
                         guard vm.notchState == .open else { return }
                         withAnimation(.spring(response: 0.42, dampingFraction: 0.8)) {
-                            vm.notchSize = newView == .codeIsland ? codeIslandOpenNotchSize : openNotchSize
+                            vm.notchSize.height = newView == .codeIsland ? codeIslandOpenNotchSize.height : openNotchSize.height
                         }
                     }
                     .onChange(of: vm.isBatteryPopoverActive) {
@@ -415,14 +417,15 @@ struct ContentView: View {
 
     @ViewBuilder
     func CodeIslandClosedWing() -> some View {
-        HStack(spacing: 0) {
-            CodeIslandLeftWing(height: vm.effectiveClosedNotchHeight)
-            Rectangle()
-                .fill(.black)
-                .frame(width: vm.closedNotchSize.width - 20)
-            CodeIslandRightWing(height: vm.effectiveClosedNotchHeight)
+        if let state = ciBridge.appState {
+            let screenW = getScreenFrame(coordinator.selectedScreenUUID)?.width ?? 1440
+            EmbeddedClosedPanel(
+                appState: state,
+                notchHeight: vm.effectiveClosedNotchHeight,
+                notchW: vm.closedNotchSize.width,
+                screenWidth: screenW
+            )
         }
-        .frame(height: vm.effectiveClosedNotchHeight, alignment: .center)
     }
 
     @ViewBuilder

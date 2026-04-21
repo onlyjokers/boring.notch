@@ -7,12 +7,15 @@
 
 import Defaults
 import SwiftUI
+import CodeIslandLib
+import CodeIslandCore
 
 struct BoringHeader: View {
     @EnvironmentObject var vm: BoringViewModel
     @ObservedObject var batteryModel = BatteryStatusViewModel.shared
     @ObservedObject var coordinator = BoringViewCoordinator.shared
     @StateObject var tvm = ShelfStateViewModel.shared
+    @ObservedObject var ciBridge = CodeIslandBridge.shared
     var body: some View {
         HStack(spacing: 0) {
             HStack {
@@ -38,7 +41,10 @@ struct BoringHeader: View {
 
             HStack(spacing: 4) {
                 if vm.notchState == .open {
-                    if isHUDType(coordinator.sneakPeek.type) && coordinator.sneakPeek.show && Defaults[.showOpenNotchHUD] {
+                    if coordinator.currentView == .codeIsland, let state = ciBridge.appState {
+                        // CodeIsland header: session count + status
+                        CodeIslandHeaderRight(appState: state)
+                    } else if isHUDType(coordinator.sneakPeek.type) && coordinator.sneakPeek.show && Defaults[.showOpenNotchHUD] {
                         OpenNotchHUD(type: $coordinator.sneakPeek.type, value: $coordinator.sneakPeek.value, icon: $coordinator.sneakPeek.icon)
                             .transition(.scale(scale: 0.8).combined(with: .opacity))
                     } else {
@@ -63,7 +69,7 @@ struct BoringHeader: View {
                                 DispatchQueue.main.async {
                                     SettingsWindowController.shared.showWindow()
                                 }
-                                
+
                             }) {
                                 Capsule()
                                     .fill(.black)
@@ -109,6 +115,39 @@ struct BoringHeader: View {
         default:
             return false
         }
+    }
+}
+
+/// Right-side header content when CodeIsland tab is active
+private struct CodeIslandHeaderRight: View {
+    var appState: AppState
+
+    var body: some View {
+        HStack(spacing: 6) {
+            // Pending approval/question badge
+            if appState.status == .waitingApproval || appState.status == .waitingQuestion {
+                Image(systemName: "bell.fill")
+                    .font(.system(size: 9, weight: .bold))
+                    .foregroundStyle(Color(red: 1.0, green: 0.7, blue: 0.28))
+                    .symbolEffect(.pulse, options: .repeating)
+            }
+
+            // Session count: active / total
+            HStack(spacing: 1) {
+                let active = appState.activeSessionCount
+                let total = appState.totalSessionCount
+                if active > 0 {
+                    Text("\(active)")
+                        .foregroundStyle(Color(red: 0.4, green: 1.0, blue: 0.5))
+                    Text("/")
+                        .foregroundStyle(.white.opacity(0.4))
+                }
+                Text("\(total)")
+                    .foregroundStyle(.white.opacity(0.9))
+            }
+            .font(.system(size: 12, weight: .semibold, design: .monospaced))
+        }
+        .padding(.trailing, 6)
     }
 }
 

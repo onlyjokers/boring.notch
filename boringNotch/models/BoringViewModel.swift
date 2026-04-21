@@ -190,8 +190,11 @@ class BoringViewModel: NSObject, ObservableObject {
     }
 
     func open() {
-        let targetSize = coordinator.currentView == .codeIsland ? codeIslandOpenNotchSize : openNotchSize
-        self.notchSize = targetSize
+        self.notchSize = openNotchSize
+        // Expand height for CodeIsland tab
+        if coordinator.currentView == .codeIsland {
+            self.notchSize.height = codeIslandOpenNotchSize.height
+        }
         self.notchState = .open
 
         // Force music information update when notch is opened

@@ -17,25 +17,14 @@ struct CodeIslandNotchView: View {
     var body: some View {
         Group {
             if let state = bridge.appState {
-                GeometryReader { geo in
-                    EmbeddedExpandedContent(appState: state)
-                        .padding(.bottom, 16)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .onChange(of: state.surface) { _, newSurface in
-                            // When surface collapses while the tab is visible, show session list
-                            if isVisible && newSurface == .collapsed && !state.sessions.isEmpty {
-                                withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
-                                    state.surface = .sessionList
-                                }
+                EmbeddedExpandedContent(appState: state)
+                    .onChange(of: state.surface) { _, newSurface in
+                        if isVisible && newSurface == .collapsed && !state.sessions.isEmpty {
+                            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) {
+                                state.surface = .sessionList
                             }
                         }
-                        .onAppear {
-                            NSLog("[CodeIslandNotchView] GeometryReader size: \(geo.size)")
-                        }
-                        .onChange(of: geo.size) { _, newSize in
-                            NSLog("[CodeIslandNotchView] Size changed: \(newSize)")
-                        }
-                }
+                    }
             } else {
                 emptyState
             }
