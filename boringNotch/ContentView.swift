@@ -41,12 +41,18 @@ struct ContentView: View {
     @Default(.showNotHumanFace) var showNotHumanFace
 
     @ObservedObject var ciBridge = CodeIslandBridge.shared
+    @ObservedObject var fullscreenDetector = FullscreenMediaDetector.shared
 
     // Shared interactive spring for movement/resizing to avoid conflicting animations
     private let animationSpring = Animation.interactiveSpring(response: 0.38, dampingFraction: 0.8, blendDuration: 0)
 
     private let extendedHoverPadding: CGFloat = 30
     private let zeroHeightHoverPadding: CGFloat = 10
+
+    private var isScreenFullscreen: Bool {
+        guard let uuid = vm.screenUUID else { return false }
+        return fullscreenDetector.fullscreenStatus[uuid] ?? false
+    }
 
     private var topCornerRadius: CGFloat {
        ((vm.notchState == .open) && Defaults[.cornerRadiusScaling])
@@ -81,7 +87,8 @@ struct ContentView: View {
         {
             chinWidth += (2 * max(0, vm.effectiveClosedNotchHeight - 12) + 20)
         } else if !coordinator.expandingView.show && vm.notchState == .closed
-            && ciBridge.isAIWorking && !vm.hideOnClosed
+            && ciBridge.hasActiveSessions && !vm.hideOnClosed
+            && !(ciBridge.hideInFullscreen && isScreenFullscreen)
         {
             if let state = ciBridge.appState {
                 let screenW = getScreenFrame(coordinator.selectedScreenUUID)?.width ?? 1440
@@ -337,10 +344,10 @@ struct ContentView: View {
                       } else if (!coordinator.expandingView.show || coordinator.expandingView.type == .music) && vm.notchState == .closed && (musicManager.isPlaying || !musicManager.isPlayerIdle) && coordinator.musicLiveActivityEnabled && !vm.hideOnClosed {
                           MusicLiveActivity()
                               .frame(alignment: .center)
-                      } else if !coordinator.expandingView.show && vm.notchState == .closed && (!musicManager.isPlaying && musicManager.isPlayerIdle) && Defaults[.showNotHumanFace] && !vm.hideOnClosed  {
-                          BoringFaceAnimation()
-                       } else if !coordinator.expandingView.show && vm.notchState == .closed && ciBridge.isAIWorking && !vm.hideOnClosed {
+                      } else if !coordinator.expandingView.show && vm.notchState == .closed && ciBridge.hasActiveSessions && !vm.hideOnClosed && !(ciBridge.hideInFullscreen && isScreenFullscreen) {
                           CodeIslandClosedWing()
+                       } else if !coordinator.expandingView.show && vm.notchState == .closed && (!musicManager.isPlaying && musicManager.isPlayerIdle) && Defaults[.showNotHumanFace] && !vm.hideOnClosed  {
+                          BoringFaceAnimation()
                        } else if vm.notchState == .open {
                            BoringHeader()
                                .frame(height: max(24, vm.effectiveClosedNotchHeight))

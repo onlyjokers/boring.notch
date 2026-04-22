@@ -30,8 +30,24 @@ final class CodeIslandBridge: ObservableObject {
     @Published var activeSource: String = "claude"
     @Published var needsAttention: Bool = false
     @Published var agentStatus: AgentStatus = .idle
+    @Published var hideInFullscreen: Bool = SettingsDefaults.hideInFullscreen
+    @Published var hideWhenNoSession: Bool = SettingsDefaults.hideWhenNoSession
 
-    private init() {}
+    private var settingsCancellable: AnyCancellable?
+    private init() {
+        // Observe CodeIsland settings
+        hideInFullscreen = UserDefaults.standard.bool(forKey: SettingsKey.hideInFullscreen)
+        hideWhenNoSession = UserDefaults.standard.bool(forKey: SettingsKey.hideWhenNoSession)
+        settingsCancellable = NotificationCenter.default
+            .publisher(for: UserDefaults.didChangeNotification)
+            .throttle(for: .seconds(1), scheduler: RunLoop.main, latest: true)
+            .sink { [weak self] _ in
+                let fs = UserDefaults.standard.bool(forKey: SettingsKey.hideInFullscreen)
+                if self?.hideInFullscreen != fs { self?.hideInFullscreen = fs }
+                let hn = UserDefaults.standard.bool(forKey: SettingsKey.hideWhenNoSession)
+                if self?.hideWhenNoSession != hn { self?.hideWhenNoSession = hn }
+            }
+    }
 
     // MARK: - Lifecycle
 
@@ -108,7 +124,14 @@ final class CodeIslandBridge: ObservableObject {
     private func syncState(from state: AppState) {
         let newSessionCount = state.activeSessionCount
         let newTotalCount = state.totalSessionCount
-        let newHasActive = !state.sessions.isEmpty
+        let newHasActive: Bool = {
+            if hideWhenNoSession {
+                // Respect "auto-hide when no active session": only show when there are
+                // non-idle sessions (activeSessionCount > 0).
+                return newSessionCount > 0
+            }
+            return !state.sessions.isEmpty
+        }()
         let newStatus = state.status
         let newSource = state.primarySource
         let newNeedsAttention = state.pendingPermission != nil || state.pendingQuestion != nil

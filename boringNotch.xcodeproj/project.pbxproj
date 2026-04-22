@@ -927,11 +927,11 @@
 			);
 			name = "Build codeisland-bridge";
 			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(CONTENTS_FOLDER_PATH)/Helpers/codeisland-bridge",
+				"$(TARGET_BUILD_DIR)/$(CONTENTS_FOLDER_PATH)/Helpers/codeisland-bridge",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "set -euo pipefail\nCI_DIR=\"${SRCROOT}/../CodeIsland\"\nHELPERS_DIR=\"${BUILT_PRODUCTS_DIR}/${CONTENTS_FOLDER_PATH}/Helpers\"\nmkdir -p \"${HELPERS_DIR}\"\n# Use pre-built binary from CodeIsland .build directory\n# Run 'cd ../CodeIsland && swift build -c release --product codeisland-bridge' manually if missing\nBIN=\"${CI_DIR}/.build/arm64-apple-macosx/release/codeisland-bridge\"\nif [ ! -f \"${BIN}\" ]; then\n  BIN=\"${CI_DIR}/.build/release/codeisland-bridge\"\nfi\nif [ ! -f \"${BIN}\" ]; then\n  echo \"warning: codeisland-bridge not found. Run: cd ${CI_DIR} && swift build -c release --product codeisland-bridge\"\n  exit 0\nfi\ncp -f \"${BIN}\" \"${HELPERS_DIR}/codeisland-bridge\"\ncodesign --force --sign - \"${HELPERS_DIR}/codeisland-bridge\" 2>/dev/null || true\n";
+			shellScript = "set -euo pipefail\nCI_DIR=\"${SRCROOT}/../CodeIsland\"\nHELPERS_DIR=\"${TARGET_BUILD_DIR}/${CONTENTS_FOLDER_PATH}/Helpers\"\nmkdir -p \"${HELPERS_DIR}\"\n# Use pre-built binary from CodeIsland .build directory\n# Run 'cd ../CodeIsland && swift build -c release --product codeisland-bridge' manually if missing\nBIN=\"${CI_DIR}/.build/arm64-apple-macosx/release/codeisland-bridge\"\nif [ ! -f \"${BIN}\" ]; then\n  BIN=\"${CI_DIR}/.build/release/codeisland-bridge\"\nfi\nif [ ! -f \"${BIN}\" ]; then\n  echo \"warning: codeisland-bridge not found. Run: cd ${CI_DIR} && swift build -c release --product codeisland-bridge\"\n  exit 0\nfi\ncp -f \"${BIN}\" \"${HELPERS_DIR}/codeisland-bridge\"\ncodesign --force --sign - \"${HELPERS_DIR}/codeisland-bridge\" 2>/dev/null || true\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1168,7 +1168,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1234,7 +1234,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1273,7 +1273,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/mediaremote-adapter",
